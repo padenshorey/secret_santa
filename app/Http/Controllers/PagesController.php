@@ -21,12 +21,21 @@ class PagesController extends Controller
 
     public function store()
     {
-        $participant = new Participant();
 
-        $participant->firstName = request('first_name');
-        $participant->lastName = request('last_name');
+        request()->validate([
+            'firstName' => ['required'],
+            'lastName' => ['required'],
+            'email' => ['required', 'email'],
+            'exceptions' => ['sometimes']
+        ]);
+
+        //Participant::create(request(['firstName', 'lastName', 'email', 'exceptions']));
+
+        $participant = new Participant();
+        $participant->firstName = request('firstName');
+        $participant->lastName = request('lastName');
         $participant->email = request('email');
-        $participant->exceptions = request('exceptions');
+        $participant->exceptions = request('exceptions', false);
 
         $participant->save();
 
